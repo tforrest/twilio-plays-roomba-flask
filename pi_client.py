@@ -12,7 +12,7 @@ def run_command(message):
 	try:
 		command, degree = message.split()
 		command = command.lower()
-        degree = float(degree)
+		degree = float(degree)
         
 		if command == 'forward':
 			roomba.straight(degree)
@@ -48,7 +48,7 @@ while True:
             print(command)
             run_command(command)
         else:
-            printf("Invalid command.")
+            print("Invalid command.")
     else:
         print('No commands in the queue.')
 
