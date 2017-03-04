@@ -43,7 +43,7 @@ def roomba_command():
 @app.route('/next', methods=['GET'])
 def next():
 	if len(task_q) == 0:
-		return jsonify({})
+		return jsonify({'command': None})
 	else:
 		task = task_q[0]
 		task_q.pop(0)
