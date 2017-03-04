@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
+from dotenv import load_dotenv, find_dotenv
 app = Flask(__name__)
+load_dotenv(find_dotenv())
 
 @app.route('/')
 def hello_world():
