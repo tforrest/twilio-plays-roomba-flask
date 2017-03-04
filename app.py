@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
+from flask import render_template
 #from dotenv import load_dotenv, find_dotenv
 from twilio import twiml
-
 
 from collections import deque
 from threading import Thread
@@ -78,7 +78,7 @@ def queue():
 
 @app.route('/', methods=['GET'])
 def index():
-	return 'Hello!'
+	return render_template('index.html')
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
