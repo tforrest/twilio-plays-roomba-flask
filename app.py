@@ -43,11 +43,11 @@ def roomba_command():
 @app.route('/next', methods=['GET'])
 def next():
 	if len(task_q) == 0:
-		return ''
+		return jsonify({})
 	else:
 		task = task_q[0]
 		task_q.pop(0)
-		return task
+		return jsonify({'command': task})
 
 @app.route('/queue', methods=['GET'])
 def queue():
