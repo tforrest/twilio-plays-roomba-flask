@@ -15,8 +15,8 @@ app = Flask(__name__)
 
 directions = ['forward', 'backward']
 
-task_q = Queue()
-def send_rasp(task_q):
+task_q = []
+"""def send_rasp(task_q):
 	while True:
 		sleep(2)
 		if task_q.empty():
@@ -27,7 +27,7 @@ def send_rasp(task_q):
 
 rasp_signal = Thread(target=send_rasp, args=(task_q, ))
 rasp_signal.setDaemon(True)
-rasp_signal.start()
+rasp_signal.start()"""
 
 @app.route('/', methods=['POST'])
 def roomba_command():
@@ -37,9 +37,13 @@ def roomba_command():
 	if not validate_message:
 		message = 'Invalid command'
 	else:
-		task_q.put(body)
+		task_q.append(body)
 	twilio_resp.message(message)
 	return str(twilio_resp)
+
+@app.route('/queue', methods=['GET'])
+def queue():
+	return jsonify(task_q)
 
 @app.route('/', methods=['GET'])
 def index():
