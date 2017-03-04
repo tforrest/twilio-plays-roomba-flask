@@ -24,7 +24,7 @@ def run_command(message):
 		elif command == 'turn-':
 			roomba.counterclockwise(degree)
 	except Exception as e:
-        print(e)
+		print e
 		print("Error when sending message: {}".format(message))
 	finally:
 		time.sleep(0.5)
@@ -39,17 +39,23 @@ def validate(message):
 		return False
 	return True
 
-while True:
-    res = requests.get(URL).json()
+def start_client():
+	while True:
+		try:
+			res = requests.get(URL).json()
+		except Exception as e:
+			print e
+			print 'Invalid request to Twilio'
+		if 'command' in res:
+			command = res['command']
+			if validate(command):
+				print(command)
+				run_command(command)
+			else:
+				print("Invalid command.")
+		else:
+			print('No commands in the queue.')
 
-    if 'command' in res:
-        command = res['command']
-        if validate(command):
-            print(command)
-            run_command(command)
-        else:
-            print("Invalid command.")
-    else:
-        print('No commands in the queue.')
-
-    time.sleep(5)
+		time.sleep(2)
+if __name__ == '__main__':
+	start_client()
