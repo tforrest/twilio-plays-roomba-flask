@@ -13,12 +13,35 @@ while True:
 
     if 'command' in res:
         if validate_message(res['command']):
-            print(str(res))
+            command = res['command']
+            
+            print(command)
+            run_command(command)
         else:
             printf("Invalid command.")
     else:
         print('No commands in the queue.')
+
     time.sleep(5)
+
+def run_command(message):
+	try:
+		command, degree = message.split()
+		command = command.lower()
+		if command == 'forward':
+			roomba.straight(degree)
+		elif command == 'backward':
+			roomba.clockwise(180)
+			roomba.straight(degree)
+		elif command == 'turn':
+			roomba.clockwise(degree)
+		elif command == 'turn-':
+			roomba.counterclockwise(degree)
+	except Exception as e:
+		print("Error when sending message: {}".format(message))
+	finally:
+		time.sleep(0.5)
+		roomba.drive(0, 0)
 
 def validate_message(message):
 	try:

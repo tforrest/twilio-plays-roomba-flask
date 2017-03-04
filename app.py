@@ -57,26 +57,6 @@ def queue():
 def index():
 	return 'Hello!'
 
-def handle_twilio_message(message):
-	try:
-		command, degree = message.split()
-		command = command.lower()
-		if command == 'forward':
-			roomba.straight(degree)
-		elif command == 'backward':
-			roomba.clockwise(180)
-			roomba.straight(degree)
-		elif command == 'turn':
-			roomba.clockwise(degree)
-		elif command == 'turn-':
-			roomba.counterclockwise(degree)
-	except Exception as e:
-		print("Error when sending message: {}".format(message))
-	finally:
-		time.sleep(0.5)
-		roomba.drive(0, 0)
-
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.debug = True
