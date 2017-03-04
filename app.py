@@ -43,7 +43,7 @@ def roomba_command():
 @app.route('/next', methods=['GET'])
 def next():
 	if len(task_q) == 0:
-		return jsonify({'command': None})
+		return jsonify({})
 	else:
 		task = task_q[0]
 		task_q.pop(0)
@@ -56,15 +56,6 @@ def queue():
 @app.route('/', methods=['GET'])
 def index():
 	return 'Hello!'
-
-def validate_message(message):
-	try:
-		command, degree = message.split()
-		if command not in ['forward', 'backward', 'turn-', 'turn'] and float(degree) < 0:
-			return False
-	except Exception as e:
-		return False
-	return True
 
 def handle_twilio_message(message):
 	try:
