@@ -16,9 +16,10 @@ task_q = Queue()
 def send_rasp(task_q):
 	while True:
 		sleep(2)
-		if not task_q.empty():
-			message = task_q.get()
-			print(message)
+		if task_q.empty():
+			continue
+		message = task_q.get()
+		print(message)
 
 rasp_signal = Thread(target=send_rasp, args=(task_q, ))
 rasp_signal.setDaemon(True)
