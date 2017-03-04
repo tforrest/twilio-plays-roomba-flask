@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from twilio import twiml
 
 
-from Queue import Queue
+from collections import deque
 from threading import Thread
 from time import sleep
 import os
@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 directions = ['forward', 'backward']
 
-task_q = []
+task_q = deque()
 """def send_rasp(task_q):
 	while True:
 		sleep(2)
@@ -29,25 +29,48 @@ rasp_signal = Thread(target=send_rasp, args=(task_q, ))
 rasp_signal.setDaemon(True)
 rasp_signal.start()"""
 
+help_message = '''
+Twilio Plays Roomba!
+
+COMMANDS:
+
+turn [degree] : turns the roomba X number of positive degrees
+
+turn- [degree] : turns the roomba X number of negative degrees
+
+forwards : moves the roomba forward
+
+backward : moves the roomba backward
+'''
+
+def validate(message):
+	try:
+		command, degree = message.split()
+		if command not in ['forward', 'backward', 'turn-', 'turn'] or float(degree) < 0:
+			return False
+	except Exception as e:
+		return False
+	return True
+
 @app.route('/', methods=['POST'])
 def roomba_command():
 	twilio_resp = twiml.Response()
 	body = request.form['Body']
-	task_q.append(body)
-
 	message = 'Command valid and queued to roomba'
+	if body.lower() == 'help':
+		message = help_message
+	elif not validate(body):
+		message = 'Invalid command try again \n\n {}'.format(help_message)
+	else:
+		task_q.append(body)
 	twilio_resp.message(message)
-
 	return str(twilio_resp)
 
 @app.route('/next', methods=['GET'])
 def next():
-	if len(task_q) == 0:
+	if not task_q:
 		return jsonify({})
-	else:
-		task = task_q[0]
-		task_q.pop(0)
-		return jsonify({'command': task})
+	return jsonify({'command': task_q.popleft()})
 
 @app.route('/queue', methods=['GET'])
 def queue():
