@@ -38,7 +38,7 @@ turn [degree] : turns the roomba X number of positive degrees
 
 turn- [degree] : turns the roomba X number of negative degrees
 
-forwards : moves the roomba forward
+forward : moves the roomba forward
 
 backward : moves the roomba backward
 '''
