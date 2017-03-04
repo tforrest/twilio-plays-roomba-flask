@@ -74,7 +74,7 @@ def next():
 
 @app.route('/queue', methods=['GET'])
 def queue():
-	return jsonify(task_q)
+	return jsonify(list(task_q))
 
 @app.route('/', methods=['GET'])
 def index():
