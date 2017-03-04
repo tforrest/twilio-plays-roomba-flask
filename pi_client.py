@@ -22,6 +22,8 @@ def run_command(message):
 			roomba.clockwise(degree)
 		elif command == 'turn-':
 			roomba.counterclockwise(degree)
+		else:
+			print("Not a valid command: {}".format(message))
 	except Exception as e:
 		print e
 		print("Error when sending message: {}".format(message))
