@@ -56,8 +56,8 @@ def validate(message):
 def roomba_command():
 	twilio_resp = twiml.Response()
 	body = request.form['Body']
-	message = 'Command valid and queued to roomba'
-	if body.lower() == 'help':
+	message = 'Command valid and queued to roomba! Text howto to see all the commands'
+	if body.lower() == 'howto':
 		message = help_message
 	elif not validate(body):
 		message = 'Invalid command try again \n\n {}'.format(help_message)
