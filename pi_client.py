@@ -55,7 +55,7 @@ def start_client():
 				print("Invalid command.")
 		else:
 			print('No commands in the queue.')
-		time.sleep(2)
+		time.sleep(1)
 
 if __name__ == '__main__':
 	start_client()
