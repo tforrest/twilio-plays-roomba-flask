@@ -33,13 +33,21 @@ rasp_signal.start()"""
 def roomba_command():
 	twilio_resp = twiml.Response()
 	body = request.form['Body']
+	task_q.append(body)
+
 	message = 'Command valid and queued to roomba'
-	if not validate_message:
-		message = 'Invalid command'
-	else:
-		task_q.append(body)
 	twilio_resp.message(message)
+
 	return str(twilio_resp)
+
+@app.route('/next', methods=['GET'])
+def next():
+	if len(task_q) == 0:
+		return ''
+	else:
+		task = task_q[0]
+		task_q.pop(0)
+		return task
 
 @app.route('/queue', methods=['GET'])
 def queue():
