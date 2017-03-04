@@ -32,7 +32,7 @@ roomba = Create2()
 roomba.start()
 roomba.safe()
 
-@app.route('/message', methods=['POST'])
+@app.route('/', methods=['POST'])
 def roomba_command():
 	twilio_resp = twiml.Response()
 	body = request.form['Body']
