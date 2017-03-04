@@ -46,6 +46,7 @@ def start_client():
 		except Exception as e:
 			print e
 			print 'Invalid request to Twilio'
+			continue
 		if 'command' in res:
 			command = res['command']
 			if validate(command):
