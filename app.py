@@ -20,6 +20,7 @@ def send_rasp(task_q):
 			continue
 		message = task_q.get()
 		print(message)
+		handle_twilio_message(message)
 
 rasp_signal = Thread(target=send_rasp, args=(task_q, ))
 rasp_signal.setDaemon(True)
@@ -27,27 +28,49 @@ rasp_signal.start()
 
 app = Flask(__name__)
 
+roomba = Create2()
+roomba.start()
+roomba.safe()
+
 @app.route('/message', methods=['POST'])
 def roomba_command():
-	# twilio text message
-	body = request.form['Body']
-
-	resp = handle_twilio_message(body)
-
 	twilio_resp = twiml.Response()
-	twilio_resp.message(resp)
+	body = request.form['Body']
+	message = 'Command valid and queued to roomba'
+	if not validate_message:
+		message = 'Invalid command'
+	else:
+		task_q.put(body)
+	twilio_resp.message(message)
 	return str(twilio_resp)
 
-def handle_twilio_message(message):
-	if message.lower() in directions:
-		task_q.put(message.lower())
-		return 'Message sent'
+def validate_message(message):
 	try:
-		degree = float(message)
-	except ValueError as e:
-		return 'Invalid command'
-	task_q.put(str(degree))
-	return 'Message sent'
+		command, degree = message.split()
+		if command not in ['forward', 'backward', 'turn-', 'turn'] and float(degree) < 0:
+			return False
+	except Exception as e:
+		return False
+	return True
+
+def handle_twilio_message(message):
+	try:
+		command, degree = message.split()
+		command = command.lower()
+		if command == 'forward':
+			roomba.straight(degree)
+		elif command == 'backward':
+			roomba.clockwise(180)
+			roomba.straight(degree)
+		elif command == 'turn':
+			roomba.clockwise(degree)
+		elif command == 'turn-':
+			roomba.counterclockwise(degree)
+	except Exception as e:
+		print("Error when sending message: {}".format(message))
+	finally:
+		time.sleep(0.5)
+		roomba.drive(0, 0)
 
 if __name__ == '__main__':
 	app.run(debug=True)
