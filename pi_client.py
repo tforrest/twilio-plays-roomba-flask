@@ -13,12 +13,11 @@ def run_command(message):
 		command, degree = message.split()
 		command = command.lower()
 		degree = float(degree)
-        
+
 		if command == 'forward':
 			roomba.straight(degree)
 		elif command == 'backward':
-			roomba.clockwise(180)
-			roomba.straight(degree)
+			roomba.straight(-1 * degree)
 		elif command == 'turn':
 			roomba.clockwise(degree)
 		elif command == 'turn-':
