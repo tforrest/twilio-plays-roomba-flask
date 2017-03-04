@@ -13,9 +13,6 @@ load_dotenv(find_dotenv())
 directions = ['forward', 'backward']
 
 task_q = Queue()
-
-app = Flask(__name__)
-
 def send_rasp(task_q):
 	while True:
 		sleep(2)
