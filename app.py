@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from dotenv import load_dotenv, find_dotenv
+#from dotenv import load_dotenv, find_dotenv
 from twilio import twiml
 
 
@@ -8,7 +8,9 @@ from threading import Thread
 from time import sleep
 
 
-load_dotenv(find_dotenv())
+app = Flask(__name__)
+
+#load_dotenv(find_dotenv())
 
 directions = ['forward', 'backward']
 
@@ -26,12 +28,6 @@ rasp_signal = Thread(target=send_rasp, args=(task_q, ))
 rasp_signal.setDaemon(True)
 rasp_signal.start()
 
-app = Flask(__name__)
-
-roomba = Create2()
-roomba.start()
-roomba.safe()
-
 @app.route('/', methods=['POST'])
 def roomba_command():
 	twilio_resp = twiml.Response()
@@ -43,6 +39,10 @@ def roomba_command():
 		task_q.put(body)
 	twilio_resp.message(message)
 	return str(twilio_resp)
+
+@app.route('/', methods=['GET'])
+def index():
+	return 'Hello!'
 
 def validate_message(message):
 	try:
@@ -71,6 +71,7 @@ def handle_twilio_message(message):
 	finally:
 		time.sleep(0.5)
 		roomba.drive(0, 0)
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
