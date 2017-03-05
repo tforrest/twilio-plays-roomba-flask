@@ -2,11 +2,8 @@ import requests
 import time
 from roomba.create2 import Create2
 import pyrebase
-import json
 
-roomba = Create2()
-roomba.start()
-roomba.safe()
+roomba = None
 
 DISTANCE = 19
 ANGLE = 20
@@ -83,61 +80,68 @@ def read_sensors():
 	data = {
 		"sensors/": {
 			"angle": sensors.angle,
-			"distance": sensors.distance,
+			"distance": sensors.distance
 		},
-		"bumper/": {
-			"bumper_center_left": sensors.light_bumper_center_left,
-			"bumper_center_right": sensors.light_bumper_center_right,
-			"bumper_front_left": sensors.light_bumper_front_left,
-			"bumper_front_right": sensors.light_bumper_front_right,
-			"bumper_left": sensors.light_bumper_left,
-			"bumper_right": sensors.light_bumper_right
+		"sensors/bumper/": {
+			"bumper_center_left": sensors.bumper_center_left,
+			"bumper_center_right": sensors.bumper_center_right,
+			"bumper_front_left": sensors.bumper_front_left,
+			"bumper_front_right": sensors.bumper_front_right,
+			"bumper_left": sensors.bumper_left,
+			"bumper_right": sensors.bumper_right
 		},
-		"cliff/": {
+		"sensors/cliff/": {
 			"cliff_front_left": sensors.cliff_front_left,
 			"cliff_front_right": sensors.cliff_front_right,
 			"cliff_left": sensors.cliff_left,
 			"cliff_right": sensors.cliff_right
 		},
-		"encoder/": {
-			"encoder_left": sensors.left_encoder_count,
-			"encoder_right": sensors.right_encoder_count
+		"sensors/encoder/": {
+			"encoder_left": sensors.encoder_left,
+			"encoder_right": sensors.encoder_right
 		},
-		"velocity/": {
+		"sensors/velocity/": {
 			"wheel_left_velocity": sensors.requested_left_velocity,
 			"wheel_right_velocity": sensors.requested_right_velocity
 		},
-		"wheel_drop/": {
+		"sensors/wheel_drop/": {
 			"wheel_drop_left": sensors.wheel_drop_left,
 			"wheel_drop_right": sensors.wheel_drop_right
 		}
 	}
-	
+
 	print(str(data))
 	db.update(data)
 
 def start_client():
-	read_sensors()
+	roomba = Create2()
+	roomba.start()
+	roomba.safe()
+
+	count = 0
 
 	while True:
+		if count % 2 == 0:
+			read_sensors()
 		try:
 			res = requests.get(URL).json()
+			if 'command' in res:
+				command = res['command']
+				if validate(command):
+					print(command)
+					run_command(command)
+				else:
+					print("Invalid command.")
+			else:
+				print('No commands in the queue.')
+				
 		except Exception as e:
 			print e
 			print 'Invalid request to Twilio'
 			continue
-		if 'command' in res:
-			command = res['command']
-			if validate(command):
-				print(command)
-				run_command(command)
-			else:
-				print("Invalid command.")
-		else:
-			print('No commands in the queue.')
+
+		count = count + 1
 		time.sleep(1)
-
-
 
 
 if __name__ == '__main__':
