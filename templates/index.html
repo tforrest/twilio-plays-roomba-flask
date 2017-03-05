@@ -36,6 +36,7 @@
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/toastr.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap-tagsinput.js') }}"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,9 +46,6 @@
     <![endif]-->
 
     <style>
-      #play {
-        height: 400px;
-      }
       #commands {
         height: 300px;
         overflow: auto;
@@ -124,10 +122,66 @@
                 <li class="list-group-item">No commands have been submitted</li>
               <ul>
             </div>
-            <div class="col-md-8">
-              Hello
+            <div class="col-md-4">
+              <table class="table table-inverse">
+                <thead>
+                  <tr>
+                    <th>Sensor</th>
+                    <th>Values</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Bumper</td>
+                    <td>
+                      Center Left: <b id="bumper_center_left"></b>
+                      Center Right: <b id="bumper_center_right"></b>
+                      Front Left: <b id="bumper_front_left"></b>
+                      Front Right: <b id="bumper_front_right"></b>
+                      Left: <b id="bumper_left"></b>
+                      Right: <b id="bumper_right"></b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Cliff</td>
+                    <td>
+                      Front Left: <b id="cliff_front_left"></b>
+                      Front Right: <b id="cliff_front_right"></b>
+                      Left: <b id="cliff_left"></b>
+                      Right: <b id="cliff_right"></b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Encoder</td>
+                    <td>
+                      Left:<b id="encoder_left"></b>
+                      Right:<b id="encoder_right"></b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Velocity</td>
+                    <td>
+                      Left Wheel: <b id="wheel_left_velocity"></b>
+                      Right Wheel: <b id="wheel_right_velocity"></b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Wheel Drop</td>
+                    <td>
+                      Left Wheel Drop: <b id="wheel_drop_left"></b>
+                      Right Wheel Drop: <b id="wheel_drop_right"></b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Others</td>
+                    <td>
+                      Distance: <b id="distance"></b>
+                      Angle: <b id="angle"></b>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <button id="submit_button" class="btn btn-primary text-center">Create a schedule!</button>
         </div>
     </section>
     <section class="bg-primary" id="code">
