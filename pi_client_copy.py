@@ -83,33 +83,7 @@ def read_sensors():
 	data = {
 		"sensors/": {
 			"angle": sensors.angle,
-			"distance": sensors.distance,
-		},
-		"bumper/": {
-			"bumper_center_left": sensors.light_bumper_center_left,
-			"bumper_center_right": sensors.light_bumper_center_right,
-			"bumper_front_left": sensors.light_bumper_front_left,
-			"bumper_front_right": sensors.light_bumper_front_right,
-			"bumper_left": sensors.light_bumper_left,
-			"bumper_right": sensors.light_bumper_right
-		},
-		"cliff/": {
-			"cliff_front_left": sensors.cliff_front_left,
-			"cliff_front_right": sensors.cliff_front_right,
-			"cliff_left": sensors.cliff_left,
-			"cliff_right": sensors.cliff_right
-		},
-		"encoder/": {
-			"encoder_left": sensors.left_encoder_count,
-			"encoder_right": sensors.right_encoder_count
-		},
-		"velocity/": {
-			"wheel_left_velocity": sensors.requested_left_velocity,
-			"wheel_right_velocity": sensors.requested_right_velocity
-		},
-		"wheel_drop/": {
-			"wheel_drop_left": sensors.wheel_drop_left,
-			"wheel_drop_right": sensors.wheel_drop_right
+			"distance": sensors.distance
 		}
 	}
 	
