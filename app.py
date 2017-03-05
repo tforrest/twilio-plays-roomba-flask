@@ -46,6 +46,7 @@ backward : moves the roomba backward
 def validate(message):
 	try:
 		command, degree = message.split()
+		command = command.lower()
 		if command not in ['forward', 'backward', 'turn-', 'turn'] or float(degree) < 0:
 			return False
 	except Exception as e:
