@@ -9,34 +9,24 @@ roomba.safe()
 URL = 'https://twilio-plays-roomba.herokuapp.com/next';
 
 def run_command(message):
-	try:
-		command, degree = message.split()
-		command = command.lower()
-		degree = float(degree)
-		print("Running command: {}".format(message))
-		if command == 'forward':
-			roomba.straight(degree)
-		elif command == 'backward':
-			roomba.straight(-1 * degree)
-		elif command == 'turn':
-			roomba.clockwise(degree)
-		elif command == 'turn-':
-			roomba.counterclockwise(degree)
-		else:
-			print("Not a valid command: {}".format(message))
-	except Exception as e:
-		print e
-		print("Error when sending message: {}".format(message))
-	finally:
-		time.sleep(0.5)
-		roomba.drive(0, 0)
+	command = message.lower()
+	print("Running command: {}".format(message))
+	if command == 'forward':
+		roomba.straight(50)
+	elif command == 'backward':
+		roomba.straight(-1 * 50)
+	elif command == 'turn clockwise':
+		roomba.clockwise(50)
+	elif command == 'turn counterclockwise':
+		roomba.counterclockwise(50)
+	else:
+		print("Not a valid command: {}".format(message))
+	time.sleep(0.5)
+	roomba.drive(0, 0)
 
 def validate(message):
-	try:
-		command, degree = message.split()
-		if command not in ['forward', 'backward', 'turn-', 'turn'] and float(degree) < 0:
-			return False
-	except Exception as e:
+	command = command.lower()
+	if command not in ['forward', 'backward', 'turn counterclockwise', 'turn clockwise']:
 		return False
 	return True
 

@@ -34,9 +34,9 @@ Twilio Plays Roomba!
 
 COMMANDS:
 
-turn [degree] : turns the roomba X number of positive degrees
+turn clockwise : turns the roomba clockwise
 
-turn- [degree] : turns the roomba X number of negative degrees
+turn counterclockwise : turns the roomba counterclockwise
 
 forward : moves the roomba forward
 
@@ -44,12 +44,8 @@ backward : moves the roomba backward
 '''
 
 def validate(message):
-	try:
-		command, degree = message.split()
-		command = command.lower()
-		if command not in ['forward', 'backward', 'turn-', 'turn'] or float(degree) < 0:
-			return False
-	except Exception as e:
+	command = command.lower()
+	if command not in ['forward', 'backward', 'turn counterclockwise', 'turn clockwise']:
 		return False
 	return True
 
