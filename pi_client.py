@@ -3,10 +3,6 @@ import time
 from roomba.create2 import Create2
 import pyrebase
 
-roomba = Create2()
-roomba.start()
-roomba.safe()
-
 DISTANCE = 19
 ANGLE = 20
 
@@ -76,7 +72,51 @@ def validate(message):
 		return False
 	return True
 
+def read_sensors():
+	sensors = roomba.query_list([SENSORS_LIST])
+
+    data = {
+        "sensors/": {
+            "angle": sensors.angle,
+            "distance": sensors.distance
+        },
+        "sensors/bumper/": {
+            "bumper_center_left": sensors.bumper_center_left,
+            "bumper_center_right": sensors.bumper_center_right,
+            "bumper_front_left": sensors.bumper_front_left,
+            "bumper_front_right": sensors.bumper_front_right,
+            "bumper_left": sensors.bumper_left,
+            "bumper_right": sensors.bumper_right
+        },
+        "sensors/cliff/": {
+            "cliff_front_left": sensors.cliff_front_left,
+            "cliff_front_right": sensors.cliff_front_right,
+            "cliff_left": sensors.cliff_left,
+            "cliff_right": sensors.cliff_right
+        },
+        "sensors/encoder/": {
+            "encoder_left": sensors.encoder_left,
+            "encoder_right": sensors.encoder_right
+        },
+        "sensors/velocity/": {
+            "wheel_left_velocity": sensors.requested_left_velocity,
+            "wheel_right_velocity": sensors.requested_right_velocity
+        },
+        "sensors/wheel_drop/": {
+            "wheel_drop_left": sensors.wheel_drop_left,
+            "wheel_drop_right": sensors.wheel_drop_right
+        }
+    }
+
+    db.update(data)
+
 def start_client():
+    roomba = Create2()
+    roomba.start()
+    roomba.safe()
+
+    read_sensors()
+
 	while True:
 		try:
 			res = requests.get(URL).json()
@@ -95,8 +135,7 @@ def start_client():
 			print('No commands in the queue.')
 		time.sleep(1)
 
-def read_sensors():
-	sensors = roomba.query_list([SENSORS_LIST])
+
 
 
 if __name__ == '__main__':
