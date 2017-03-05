@@ -3,6 +3,8 @@ import time
 from roomba.create2 import Create2
 import pyrebase
 
+roomba = None
+
 DISTANCE = 19
 ANGLE = 20
 
