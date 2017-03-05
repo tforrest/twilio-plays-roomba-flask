@@ -1,19 +1,55 @@
 import requests
 import time
 from roomba.create2 import Create2
+import pyrebase
 
 roomba = Create2()
 roomba.start()
 roomba.safe()
 
+DISTANCE = 19
+ANGLE = 20
+
+CLIFF_LEFT = 9
+CLIFF_FRONT_LEFT = 10
+CLIFF_FRONT_RIGHT = 11
+CLIFF_RIGHT = 12
+
+BUMPER = 45
+
+WHEEL_DROP = 7
+
+WALL = 8
+
+VELOCITY_LEFT = 42
+VELOCITY_RIGHT = 41
+
+LEFT_ENCODER = 43
+RIGHT_ENCODER = 44
+
+SENSORS_LIST = [DISTANCE, ANGLE, CLIFF_LEFT, CLIFF_FRONT_LEFT, CLIFF_FRONT_RIGHT, CLIFF_RIGHT, BUMPER, WHEEL_DROP, WALL, VELOCITY_LEFT, VELOCITY_RIGHT, LEFT_ENCODER, RIGHT_ENCODER]
+
+
 URL = 'https://twilio-plays-roomba.herokuapp.com/next';
+
+config = {
+  "apiKey": "AIzaSyD7Br51b3F296kpbD3PcvRbaz1jYaL_Oi8",
+  "authDomain": "hacktech2017-2d0d8.firebaseapp.com",
+  "databaseURL": "https://hacktech2017-2d0d8.firebaseio.com",
+  "storageBucket": "hacktech2017-2d0d8.appspot.com"
+}
+
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
+
+#results = db.child("sensors").update({"distance": 8})
 
 def run_command(message):
 	try:
 		command, degree = message.split()
 		command = command.lower()
 		degree = float(degree)
-
+		print("Running command: {}".format(message))
 		if command == 'forward':
 			roomba.straight(degree)
 		elif command == 'backward':
@@ -22,6 +58,8 @@ def run_command(message):
 			roomba.clockwise(degree)
 		elif command == 'turn-':
 			roomba.counterclockwise(degree)
+		else:
+			print("Not a valid command: {}".format(message))
 	except Exception as e:
 		print e
 		print("Error when sending message: {}".format(message))
@@ -56,6 +94,10 @@ def start_client():
 		else:
 			print('No commands in the queue.')
 		time.sleep(1)
+
+def read_sensors():
+	sensors = roomba.query_list([SENSORS_LIST])
+
 
 if __name__ == '__main__':
 	start_client()
